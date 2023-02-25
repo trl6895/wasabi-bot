@@ -1,6 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
-const { Client, Events, GatewayIntentBits, Collection } = require("discord.js");
+const { Client, GatewayIntentBits, Collection } = require("discord.js");
 require("dotenv/config");
 
 const client = new Client({
@@ -32,42 +32,19 @@ for (const file of commandFiles) {
   }
 }
 
-client.on(Events.ClientReady, (c) => {
-  console.log(`${c.user.tag} is ready`);
-});
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs
+    .readdirSync(eventsPath)
+    .filter(file => file.endsWith('.js'));
 
-client.on(Events.InteractionCreate, async interaction => {
-    // Exit if the interaction is not a slash command
-    if (!interaction.isChatInputCommand()) return;
-    
-    const command = interaction
-        .client
-        .commands
-        .get(interaction.commandName);
-
-	if (!command) {
-		console.error(
-            `No command matching ${interaction.commandName} was found.`
-        );
-		return;
+for (const file of eventFiles) {
+	const filePath = path.join(eventsPath, file);
+	const event = require(filePath);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
 	}
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp(
-                { content: 'There was an error while executing this command!', 
-                ephemeral: true 
-            });
-		} else {
-			await interaction.reply(
-                { content: 'There was an error while executing this command!', 
-                ephemeral: true 
-            });
-		}
-    }
-})
+}
 
 client.login(process.env.TOKEN);
