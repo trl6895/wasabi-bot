@@ -10,6 +10,8 @@ Simple music bot for Discord
     
   Setup/basics reference here: https://www.youtube.com/watch?v=qRMVNtIF73c
   
+  In-depth written guide of discord.js: https://discordjs.guide/creating-your-bot/command-deployment.html#guild-commands
+  
 ## Purpose
 The idea of this bot is to ideally be a music player for my (Triston's) own selection of music.
 It would be able to grab music from the selection on Youtube and play it in a discord voice channel.
