@@ -3,10 +3,7 @@ Simple music bot for Discord
 
 ## Requirements (Editing):
   - Node.js
-  - npm modules:
-    - nodemon
-    - discord.js
-    - dotenv
+  - node modules in packages.json
     
   Setup/basics reference here: https://www.youtube.com/watch?v=qRMVNtIF73c
   
